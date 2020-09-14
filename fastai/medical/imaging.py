@@ -32,7 +32,7 @@ def get_dicom_files(path, recurse=True, folders=None):
 @patch
 def dcmread(fn:Path, force = False):
     "Open a `DICOM` file"
-    return pydicom.dcmread(str(fn), force)
+    return pydicom.read_file(str(fn), force)
 
 # Cell
 class TensorDicom(TensorImage):
@@ -45,7 +45,7 @@ class PILDicom(PILBase):
     @classmethod
     def create(cls, fn:(Path,str,bytes), mode=None)->None:
         "Open a `DICOM file` from path `fn` or bytes `fn` and load it as a `PIL Image`"
-        if isinstance(fn,bytes): im = Image.fromarray(pydicom.dcmread(pydicom.filebase.DicomBytesIO(fn)).pixel_array)
+        if isinstance(fn,bytes): im = Image.fromarray(pydicom.read_file(pydicom.filebase.DicomBytesIO(fn)).pixel_array)
         if isinstance(fn,(Path,str)): im = Image.fromarray(dcmread(fn).pixel_array)
         im.load()
         im = im._new(im.im)
